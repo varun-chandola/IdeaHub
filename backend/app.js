@@ -1,25 +1,16 @@
-import express from "express"
-import mongoose from "mongoose"
+import express, { urlencoded } from "express"
+import { connectDB } from "./db/db.js"
 import dotenv from "dotenv"
+import cookieParser from "cookie-parser"
+import userRouter from "./routes/user.route.js"
+
 dotenv.config()
+
 const app = express()
-
-const connectDB = async () => {
-    try {
-        const db = await mongoose.connect(process.env.MONGO_CONNECTION_URL)
-        console.log(`db connection host : ${db.connection.host}`)
-    } catch (error) {
-        return error.message
-    }
-}
-
-
+app.use(express.json({urlencoded:"16kb"}))
+app.use(cookieParser())
 connectDB()
-app.get('/', async (req, res) => {
-    return res.json('Home Route')
-})
 
-
-
+app.use('/api/v1', userRouter)
 
 app.listen(process.env.PORT, () => console.log(`server running on port : ${process.env.PORT} `))
