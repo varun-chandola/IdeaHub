@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import Navbar from './Navbar';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 
 const AddProject = () => {
@@ -9,19 +10,23 @@ const AddProject = () => {
     const [level, setLevel] = useState('');
     const [TechStack, setTechStack] = useState('');
     const [content, setContent] = useState('');
+    const navigate = useNavigate()
 
     const addNewProject = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`http://localhost:5000/api/v1/add-project`, {
+            const response = await axios.post(`http://localhost:5000/api/v1/add-project`, {
                 title,
                 level,
                 TechStack,
                 content
-            });
-            toast.success('Project added successfully!');
+            }, { withCredentials: true });
+            if(response.data?.msg){
+                toast.success(response.data?.msg)
+                navigate('/all-projects')
+            }
         } catch (error) {
-            toast.error('Failed to add project.');
+            toast.error(error.response?.data?.msg);
         }
     };
 
@@ -40,7 +45,7 @@ const AddProject = () => {
                         <option>Advanced</option>
                     </select>
                     <label className='mx-2 text-white text-xl'>Tech Stack</label>
-                    <input type='text' className='mb-5 rounded-xl p-3 focus:outline-none focus:ring-4 focus:ring-blue-500' required value={TechStack} onChange={e => setTechStack(e.target.value)} />
+                    <input type='text' className='mb-5 rounded-xl p-3 focus:outline-none focus:ring-4 focus:ring-blue-500' placeholder='MongoDB , Express.js , React.js , Node.js' required value={TechStack} onChange={e => setTechStack(e.target.value)} />
                     <label className='mx-2 text-white text-xl'>Project</label>
                     <textarea placeholder='content(Max 500 characters)' className='focus:outline-none focus:ring-4 focus:ring-blue-500 rounded-xl p-5 mb-10' required
                         value={content}

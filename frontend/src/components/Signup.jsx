@@ -49,7 +49,7 @@ const Signup = () => {
             <p className='text-l text-red-600 mx-1'>{error}</p>
             <button type='submit' className='bg-blue-500 rounded-xl p-3 w-full hover:bg-blue-700' >Signup</button>
           </form>
-          <p className='text-black mt-10 mx-2'>Already have an account?<Link to='/login' className='mx-2 text-blue-700 font-bold'>Sign In</Link></p>
+          <p className='text-black mt-10 mx-2'>Already have an account?<Link to='/login' className='mx-2 text-blue-700 font-bold hover:underline'>Sign In</Link></p>
         </div>
       </div>
     </>

@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
+import { authContext } from './Auth'
+import toast from 'react-hot-toast'
 
 const Login = () => {
+  const { loggedInUser, setLoggedInUser } = useContext(authContext)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState('')
@@ -17,11 +20,14 @@ const Login = () => {
       }, {
         withCredentials: true
       })
-      console.log(response.data)
-      if (response?.data?.msg == "Login Successfull")
+      if (response?.data?.msg == "Login Successfull") {
+        setLoggedInUser(username)
+        toast.success(response?.data.msg)
         navigate('/all-projects')
+      }
     } catch (error) {
       setError(error?.response?.data?.msg)
+      console.log(error?.response?.data?.msg)
     }
   }
 
@@ -49,6 +55,9 @@ const Login = () => {
             <p className='text-l text-red-600 mx-1'>{error}</p>
             <button type='submit' className='bg-blue-500 rounded-xl p-3 w-full hover:bg-blue-700' >Login</button>
           </form>
+          <div className='mt-3'>
+            <p>New user ?<Link className='mx-2 text-blue-500 hover:underline' to='/signup'>Sign Up</Link></p>
+          </div>
         </div>
       </div>
     </>
