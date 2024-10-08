@@ -6,6 +6,10 @@ export const comment = async (req, res) => {
         const { projectId } = req.params
         const { comment } = req.body
 
+        if (!comment) return res.status(409).json({
+            msg: "Comment Cannot Be Empty"
+        })
+        
         if (comment?.length > 200) return res.status(401).json({
             msg: "max limit is 200 characters"
         })

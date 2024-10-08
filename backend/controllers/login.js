@@ -11,6 +11,11 @@ export const login = async (req, res) => {
             username
         })
 
+        if (!foundUser)
+            return res.status(409).json({
+                msg: "User does not Exist"
+            })
+
         if (!(await foundUser?.isPasswordCorrect(password)))
             return res.status(409).json({
                 msg: "Incorrect Password"
@@ -23,7 +28,7 @@ export const login = async (req, res) => {
 
         return res.status(200).cookie('token', token).json({
             msg: "Login Successfull",
-            foundUser,
+            // foundUser,
         })
 
     } catch (error) {

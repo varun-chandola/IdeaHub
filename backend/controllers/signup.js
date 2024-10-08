@@ -27,9 +27,13 @@ export const signup = async (req, res) => {
             username
         }, process.env.JWT_SECRET, { expiresIn: '1d' })
 
-        return res.status(200).cookie('token', token).json({
+        return res.status(200).cookie('token', token , {
+            httpOnly:true,
+            maxAge: 3600000
+        }).json({
             msg: "Signup Successfull",
-            newUser
+            // newUser,
+            token
         })
     } catch (error) {
         return res.status(500).json({
