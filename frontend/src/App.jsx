@@ -1,33 +1,33 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { Toaster } from "react-hot-toast"
+import Home from "./components/Home.jsx"
+import Login from "./components/Login.jsx"
+import Signup from "./components/Signup.jsx"
+import AllProjects from "./components/AllProjects.jsx"
+import AddProject from "./components/AddProject.jsx"
+import ViewProject from "./components/ViewProject.jsx"
+import Auth from "./components/Auth.jsx"
+import EditProject from "./components/EditProject.jsx"
+import NotAvailable from "./components/NotAvailable.jsx"
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Auth>
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/signup' element={<Signup />} />
+            <Route path='/all-projects' element={<AllProjects />} />
+            <Route path='/add-project' element={<AddProject />} />
+            <Route path='/project/:projectId/' element={<ViewProject />} />
+            <Route path='/project/:projectId/edit' element={<EditProject />} />
+            <Route path='*' element={<NotAvailable />} />
+          </Routes>
+          <Toaster />
+        </BrowserRouter>
+      </Auth>
     </>
   )
 }
