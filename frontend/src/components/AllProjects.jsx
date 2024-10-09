@@ -5,6 +5,7 @@ import Navbar from './Navbar'
 import Loader from './Loader'
 import ProfileIcon from './ProfileIcon'
 import CommentIcon from './CommentIcon'
+import toast from 'react-hot-toast'
 
 const AllProjects = () => {
     const [allProjects, setAllProjects] = useState([])
@@ -15,6 +16,10 @@ const AllProjects = () => {
             console.log(response?.data?.allProjects)
             setAllProjects(response?.data?.allProjects)
         } catch (error) {
+            if ((error?.response?.data?.msg).includes('unauthorized')) {
+                toast.error(error?.response?.data?.msg)
+                navigate('/login')
+            }
             console.log(error?.response?.data?.msg)
         }
     }
@@ -27,9 +32,10 @@ const AllProjects = () => {
         <>
             <div>
                 <Navbar />
-                {allProjects?.length == 0 ?
+                {/* {allProjects?.length == 0 ?
                     <div className='bg-gray-100 text-black w-[60vw] rounded-xl flex justify-between p-5 mt-10 hover:cursor-pointer flex m-auto'>
-                        <h1 className='text-xl'>No Projects Yet !<Link className='mx-2 font-bold text-blue-600 underline' to='/add-project'>Add One</Link> </h1></div> :
+                        <h1 className='text-xl'>No Projects Yet !<Link className='mx-2 font-bold text-blue-600 underline' to='/add-project'>Add One</Link> </h1></div> : */}
+                {
                     allProjects?.length > 0 ?
                         <div className='h-screen bg-gray-900 flex flex-col items-center'>
                             {allProjects?.map(each => (
