@@ -23,8 +23,7 @@ export const likeProject = async (req, res) => {
                 $push: {
                     likedBy: req?.user?._id
                 }
-            }, { new: true })
-
+            }, { new: true }).select('likedBy')
             return res.status(200).json({
                 msg: "Liked",
                 userLiked,
@@ -44,7 +43,7 @@ export const likeProject = async (req, res) => {
                 $pull: {
                     likedBy: req?.user?._id
                 }
-            }, { new: true }).select('likes')
+            })
 
             return res.status(200).json({
                 msg: "Removed Like",

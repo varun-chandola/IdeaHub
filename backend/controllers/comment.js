@@ -9,7 +9,7 @@ export const comment = async (req, res) => {
         if (!comment) return res.status(409).json({
             msg: "Comment Cannot Be Empty"
         })
-        
+
         if (comment?.length > 200) return res.status(401).json({
             msg: "max limit is 200 characters"
         })
@@ -19,16 +19,24 @@ export const comment = async (req, res) => {
             comment,
         })
 
-        await Post.findByIdAndUpdate(projectId, {
+
+        const postComments = await Post.findByIdAndUpdate(projectId, {
             $push: {
                 comments: newComment?._id
             }
-        })
+        }, { new: true }).populate({
+            path: "comments",
+            populate: [{
+                path: "owner",
+                select: "username"
+            }]
+        }).select('comments')
 
         return res.json({
             msg: "commented",
-            comment: newComment
+            postComments
         })
+
     } catch (error) {
         return res.status(500).json({
             msg: "error commenting",
