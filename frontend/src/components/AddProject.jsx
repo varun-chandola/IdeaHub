@@ -20,20 +20,13 @@ const AddProject = () => {
                 TechStack,
                 content
             }, { withCredentials: true });
-            if ((error?.response?.data?.msg).includes('unauthorized')) {
-                navigate('/login')
-                toast.error(error?.response?.data?.msg)
-            }
+
             if (response.data?.msg) {
                 toast.success(response.data?.msg)
                 navigate('/all-projects')
             }
         } catch (error) {
             toast.error(error.response?.data?.msg);
-            if ((error?.response?.data?.msg).includes('unauthorized')) {
-                navigate('/login')
-                toast.error(error?.response?.data?.msg)
-            }
         }
     };
 

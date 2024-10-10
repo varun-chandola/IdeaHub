@@ -1,12 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { FaCircleUser } from "react-icons/fa6";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { FaHome } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { authContext } from './Auth';
 
 const Navbar = () => {
+    const { setProject } = useContext(authContext)
     const [isOpen, setIsOpen] = useState(false)
     const [profileOrLogout, setProfileOrLogout] = useState("")
     const navigate = useNavigate()
@@ -55,7 +57,10 @@ const Navbar = () => {
                 />
                 <FaHome
                     className='text-white text-4xl hover:cursor-pointer hover:text-gray-400'
-                    onClick={() => navigate('/all-projects')}
+                    onClick={() => {
+                        navigate('/all-projects')
+
+                    }}
                 />
 
             </div>

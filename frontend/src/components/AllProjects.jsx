@@ -1,14 +1,15 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Navbar from './Navbar'
 import Loader from './Loader'
 import ProfileIcon from './ProfileIcon'
 import CommentIcon from './CommentIcon'
 import toast from 'react-hot-toast'
+import { authContext } from './Auth'
 
 const AllProjects = () => {
-    const [allProjects, setAllProjects] = useState([])
+    const {allProjects , setAllProjects} = useContext(authContext)
     const navigate = useNavigate()
     const fetchAllPosts = async () => {
         try {
@@ -32,9 +33,6 @@ const AllProjects = () => {
         <>
             <div>
                 <Navbar />
-                {/* {allProjects?.length == 0 ?
-                    <div className='bg-gray-100 text-black w-[60vw] rounded-xl flex justify-between p-5 mt-10 hover:cursor-pointer flex m-auto'>
-                        <h1 className='text-xl'>No Projects Yet !<Link className='mx-2 font-bold text-blue-600 underline' to='/add-project'>Add One</Link> </h1></div> : */}
                 {
                     allProjects?.length > 0 ?
                         <div className='h-screen bg-gray-900 flex flex-col items-center'>

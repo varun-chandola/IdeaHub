@@ -9,46 +9,30 @@ import ProfileIcon from './ProfileIcon.jsx'
 import CommentIcon from './CommentIcon.jsx'
 import Views from './Views.jsx'
 import { authContext } from './Auth.jsx'
+import { MdDeleteOutline } from "react-icons/md";
+
 
 const ViewProject = () => {
   // const [project, setProject] = useState(null)
-  const { loggedInUser, setLoggedInUser, postLikes, setPostLikes, commentLikes, setCommentLikes, comments, setComments, project, setProject, commentContent, setCommentContent } = useContext(authContext)
+  const { loggedInUser, postLikes, setPostLikes, comments, setComments, project, setProject, commentContent, setCommentContent, userLikedPost, setUserLikedPost, commentLikes } = useContext(authContext)
 
-  const { projectId } = useParams()
+  const [replyBox, setReplyBox] = useState(null)
+  const [replyContent, setReplyContent] = useState('')
   const navigate = useNavigate()
 
+  const { projectId } = useParams()
   const fetchPost = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/api/v1/project/${projectId}`, { withCredentials: true })
-      console.log(response.data?.project)
+      console.log("fetched project\n", response.data?.project)
       setProject(response?.data?.project)
+      setComments(response.data?.project?.comments)
+      setPostLikes(response.data?.project?.likes)
     } catch (error) {
-      if ((error?.response?.data?.msg).includes('unauthorized')) {
-        navigate('/login')
-        toast.error(error?.response?.data?.msg)
-      }
-      console.log(error)
+      console.log(error.response.data?.msg)
+      toast.error(error.response.data?.msg)
     }
   }
-
-  useEffect(() => {
-    fetchPost()
-  }, [])
-
-  const addComment = async (e) => {
-    try {
-      e.preventDefault()
-      const response = await axios.post(`http://localhost:5000/api/v1/${projectId}/comment`, {
-        comment: commentContent
-      }, { withCredentials: true })
-      console.log(response.data)
-      toast.success(response?.data?.msg)
-    } catch (error) {
-      console.log(error.response?.data?.msg)
-      toast.error(error.response?.data?.msg)
-    }
-  }
-
   const likeProject = async () => {
     try {
       const response = await axios.post(`http://localhost:5000/api/v1/${projectId}/like`, {}, { withCredentials: true })
@@ -61,23 +45,107 @@ const ViewProject = () => {
       toast.error(error?.response?.data?.msg)
     }
   }
+  const likeComment = async (commentId) => {
+    try {
+      console.log(commentId)
+      const response = await axios.post(`http://localhost:5000/api/v1/comment/u/like`, {
+        commentId,
+      }, { withCredentials: true })
+      toast.success(response.data?.msg)
+      console.log(response.data)
+      setComments(prevComments =>
+        prevComments.map(comment => {
+          if (comment._id === commentId) {
+            return {
+              ...comment,
+              likes: response.data?.msg === "comment liked" ? comment.likes + 1 : comment.likes - 1
+            };
+          }
+          return comment;
+        })
+      );
+    } catch (error) {
+      console.log(error)
+      if ((error?.response?.data?.msg).includes('unauthorized')) navigate('/login')
+      toast.error(error?.response?.data?.msg)
+    }
+  }
+  const likeReply = async (replyId, commentId) => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/v1/reply/u/like", {
+        replyId,
+        commentId
+      }, { withCredentials: true })
 
+      console.log(response.data)
+    } catch (error) {
+      console.log(error)
+      toast.error(error?.response?.data?.msg)
+    }
+  }
+  const addComment = async (e) => {
+    try {
+      e.preventDefault()
+      const response = await axios.post(`http://localhost:5000/api/v1/${projectId}/comment`, {
+        comment: commentContent
+      }, { withCredentials: true })
+      console.log(response.data)
+      setComments(response?.data?.postComments?.comments)
+      setCommentContent('')
+      toast.success(response?.data?.msg)
+    } catch (error) {
+      console.log(error.response?.data?.msg)
+      toast.error(error.response?.data?.msg)
+    }
+  }
+  const addReply = async (commentId, projectId) => {
+    try {
+      const response = await axios.post(`http://localhost:5000/api/v1/${commentId}/reply`,
+        {
+          replyContent,
+          projectId
+        },
+        { withCredentials: true })
+      console.log(response?.data)
+      toast.success(response?.data?.msg)
+      setComments(response.data?.commentAndreplies?.comments)
+    } catch (error) {
+      console.log(error?.response?.data?.msg)
+      toast.error(error?.response?.data?.msg)
+    }
+  }
+  const deleteComment = async (commentId, projectId) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/v1//${projectId}/${commentId}/delete-comment`, { withCredentials: true })
+      console.log(response?.data?.msg)
+      toast.success(response?.data?.msg)
+      setComments(response?.data?.restComments?.comments)
+    } catch (error) {
+      console.log(error?.response?.data?.msg)
+    }
+  }
   const deleteProject = async (projectId) => {
     try {
       const response = await axios.delete(`http://localhost:5000/api/v1/${projectId}/delete`, { withCredentials: true })
       console.log(response.data)
-      toast.success(response?.data?.msg)
+      if (response?.data?.msg === "Project Deleted") {
+        toast.success(response?.data?.msg)
+        navigate('/all-projects')
+      }
     } catch (error) {
       console.log(error?.response?.data?.msg)
     }
   }
 
+  useEffect(() => {
+    fetchPost()
+  }, [])
 
   return (
     <>
       <Navbar />
       <div>
-        {project ?
+        {(project && project?._id === projectId) ?
           <>
             <div className='flex flex-col items-center'>
               <div key={project?._id} className='bg-gray-100 text-black w-[60vw] rounded-xl flex justify-between flex-col p-5 mt-10 hover:cursor-pointer'>
@@ -146,7 +214,78 @@ const ViewProject = () => {
               </form>
             </div>
             <div className='flex flex-col items-center m-auto'>
-              <CommentAndReplies projectComment={project?.comments} />
+              {/* <CommentAndReplies projectComment={project?.comments} /> */}
+              <div className='text-white w-[60vw] flex-wrap h-screen'>
+                {(project && comments) ?
+                  <>
+                    {comments?.slice()?.reverse().map(comment => (
+                      <div key={comment?._id} className='mt-5 p-2'>
+                        <div className='flex flex-col'>
+                          <div className='flex items-center'>
+                            <span className='flex items-center justify-center'>
+                              <ProfileIcon />
+                            </span>
+                            <h1 className='rounded-xl p-1'>{comment?.owner?.username}</h1>
+                            {(loggedInUser === (comment?.owner?.username)) ? <MdDeleteOutline className='text-2xl mx-3 hover:cursor-pointer' onClick={() => deleteComment(comment?._id, project?._id)} /> : <></>}
+                          </div>
+                        </div>
+                        <div className='mx-6 flex gap-4'>
+                          <div className='flex flex-wrap'>
+                            <p>{comment?.comment}</p>
+                          </div>
+                          <div className='flex gap-2 items-start flex-wrap max-w-[30vw]'>
+                            <div className='flex gap-2 w-[40vw]'>
+                              <button onClick={() => likeComment(comment?._id)}>👍</button>
+                              <p>{comment?.likes}</p>|
+                              <p className="hover:underline hover:cursor-pointer" onClick={() => setReplyBox(comment?._id)}>Reply</p>
+                            </div>
+                            <div className={(replyBox === comment?._id) ? `show` : `hidden`}>
+                              <form className='flex flex-col'
+                                onSubmit={e => e.preventDefault()}>
+                                <textarea
+                                  type='text'
+                                  placeholder='add a reply'
+                                  className='p-2 rounded-xl w-[300px] outline-none bg-gray-700 text-white'
+                                  onChange={(e) => setReplyContent(e.target.value)}
+                                ></textarea>
+                                <div className='flex justify-end'>
+                                  <button type="submit" className="bg-green-600 text-white p-3 rounded-xl hover:bg-green-700" onClick={() => addReply(comment?._id, project?._id)}>Add Reply</button>
+                                  <button className="mx-4 bg-red-600 text-white p-3 rounded-xl hover:bg-red-700" onClick={() => setReplyBox('hidden')}>Cancel</button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <div className='gap-5'>
+                          {comment?.replies?.map(reply =>
+                          (
+                            <div key={reply?._id} className='mx-10 mt-5'>
+                              <div className='flex flex-col'>
+                                <div className='flex'>
+                                  <span className='flex items-center justify-center'>
+                                    <ProfileIcon />
+                                  </span>
+                                  <h1 className='rounded-xl p-1'>{reply?.owner?.username}</h1>
+                                </div>
+                              </div>
+                              <div className='mx-4 flex gap-4'>
+                                <div className='flex'>
+                                  <span className='flex gap-3'>
+                                    <p className='text-blue-300'>@{comment?.owner?.username}</p>{reply?.comment}
+                                  </span>
+                                </div>
+                                <div className='flex gap-2 items-start'>
+                                  <button onClick={() => likeReply(reply?._id, comment?._id)}>👍</button>
+                                  <p>{reply?.likes}</p>
+                                </div>
+                              </div>
+                            </div>))}
+                        </div>
+                      </div>
+                    ))}
+                  </> : <Loader />
+                }
+              </div >
             </div>
           </> : <Loader />
         }
