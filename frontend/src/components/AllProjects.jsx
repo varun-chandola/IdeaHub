@@ -9,7 +9,7 @@ import toast from 'react-hot-toast'
 import { authContext } from './Auth'
 
 const AllProjects = () => {
-    const {allProjects , setAllProjects} = useContext(authContext)
+    const { allProjects, setAllProjects } = useContext(authContext)
     const navigate = useNavigate()
     const fetchAllPosts = async () => {
         try {
@@ -35,12 +35,12 @@ const AllProjects = () => {
                 <Navbar />
                 {
                     allProjects?.length > 0 ?
-                        <div className='h-screen bg-gray-900 flex flex-col items-center'>
+                        <div className='h-screen flex flex-col items-center'>
                             {allProjects?.map(each => (
-                                <div key={each._id} className='bg-gray-100 text-black w-[60vw] rounded-xl flex justify-between p-5 mt-10 hover:cursor-pointer'
+                                <div key={each._id} className='bg-gray-100 shadow-2xl text-black w-[60vw] rounded-xl flex justify-between p-5 mt-10 hover:cursor-pointer'
                                     onClick={() => navigate(`/project/${each._id}`)} >
                                     <div className='w-1/2'>
-                                        <Link className='text-xl font-bold hover:underline'>{each.title}</Link>
+                                        <h1 className='text-xl font-bold hover:underline'>{each.title}</h1>
                                         <div className=''>
                                             <div className='flex gap-1'>
                                                 <span className='flex items-center justify-center'>
@@ -79,7 +79,11 @@ const AllProjects = () => {
                             ))}
                         </div>
                         :
-                        <Loader />
+                        <div>
+                          <Loader />
+                          <Loader />
+                          <Loader />
+                        </div>
                 }
 
             </div>

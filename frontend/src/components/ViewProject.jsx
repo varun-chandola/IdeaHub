@@ -14,10 +14,8 @@ import { MdDeleteOutline } from "react-icons/md";
 
 const ViewProject = () => {
   // const [project, setProject] = useState(null)
-  const { loggedInUser, postLikes, setPostLikes, comments, setComments, project, setProject, commentContent, setCommentContent, userLikedPost, setUserLikedPost, commentLikes } = useContext(authContext)
+  const { loggedInUser, postLikes, setPostLikes, comments, setComments, project, setProject, commentContent, setCommentContent } = useContext(authContext)
 
-  const [replyBox, setReplyBox] = useState(null)
-  const [replyContent, setReplyContent] = useState('')
   const navigate = useNavigate()
 
   const { projectId } = useParams()
@@ -45,60 +43,6 @@ const ViewProject = () => {
       toast.error(error?.response?.data?.msg)
     }
   }
-  const likeComment = async (commentId) => {
-    try {
-      console.log(commentId)
-      const response = await axios.post(`http://localhost:5000/api/v1/comment/u/like`, {
-        commentId,
-      }, { withCredentials: true })
-      toast.success(response.data?.msg)
-      console.log(response.data)
-      setComments(prevComments =>
-        prevComments.map(comment => {
-          if (comment?._id === commentId) {
-            return {
-              ...comment,
-              likes: response.data?.msg === "comment liked" ? comment.likes + 1 : comment.likes - 1
-            };
-          }
-          return comment;
-        })
-      );
-    } catch (error) {
-      console.log(error)
-      if ((error?.response?.data?.msg).includes('unauthorized')) navigate('/login')
-      toast.error(error?.response?.data?.msg)
-    }
-  }
-  const likeReply = async (replyId, projectId) => {
-    try {
-      const response = await axios.post("http://localhost:5000/api/v1/reply/u/like", {
-        replyId,
-        projectId
-      }, { withCredentials: true })
-      setComments(prevComments =>
-        prevComments.map(comment => ({
-          ...comment,
-          replies: comment.replies.map(reply => {
-            if (reply._id === replyId) {
-              return {
-                ...reply,
-                likes: response.data?.msg === "Liked Reply" ? reply.likes + 1 : reply.likes - 1
-              };
-            }
-            return reply;
-          })
-        }))
-      );
-
-
-      toast.success(response.data?.msg)
-      console.log(response.data)
-    } catch (error) {
-      console.log(error)
-      toast.error(error?.response?.data?.msg)
-    }
-  }
   const addComment = async (e) => {
     try {
       e.preventDefault()
@@ -112,32 +56,6 @@ const ViewProject = () => {
     } catch (error) {
       console.log(error.response?.data?.msg)
       toast.error(error.response?.data?.msg)
-    }
-  }
-  const addReply = async (commentId, projectId) => {
-    try {
-      const response = await axios.post(`http://localhost:5000/api/v1/${commentId}/reply`,
-        {
-          replyContent,
-          projectId
-        },
-        { withCredentials: true })
-      console.log(response?.data)
-      toast.success(response?.data?.msg)
-      setComments(response.data?.commentAndreplies?.comments)
-    } catch (error) {
-      console.log(error?.response?.data?.msg)
-      toast.error(error?.response?.data?.msg)
-    }
-  }
-  const deleteComment = async (commentId, projectId) => {
-    try {
-      const response = await axios.delete(`http://localhost:5000/api/v1//${projectId}/${commentId}/delete-comment`, { withCredentials: true })
-      console.log(response?.data?.msg)
-      toast.success(response?.data?.msg)
-      setComments(response?.data?.restComments?.comments)
-    } catch (error) {
-      console.log(error?.response?.data?.msg)
     }
   }
   const deleteProject = async (projectId) => {
@@ -212,8 +130,23 @@ const ViewProject = () => {
               {/* if logged in user is owner . so show delete button and update button*/}
               {(project?.owner?.username === loggedInUser) ?
                 <div className=''>
-                  <button className='bg-red-600 p-3 rounded-xl text-white mt-5 hover:bg-red-700 mx-2' onClick={() => deleteProject(project?._id)}>Delete Project</button>
-                  <button className='bg-green-600 p-3 rounded-xl text-white mt-5 hover:bg-green-700 mx-2' onClick={() => navigate(`/project/${project?._id}/edit`, {
+                  {/* <button className='bg-red-600 p-3 rounded-xl text-white mt-5 hover:bg-red-700 mx-2' onClick={() => deleteProject(project?._id)}>Delete Project</button> */}
+                  {/* Open the modal using document.getElementById('ID').showModal() method */}
+                  <button className="btn bg-red-600 p-3 rounded-xl text-white mt-5 hover:bg-red-700 mx-2" onClick={() => document.getElementById('my_modal_1').showModal()}>Delete Project</button>
+                  <dialog id="my_modal_1" className="modal">
+                    <div className="modal-box">
+                      <h3 className="font-bold text-lg">Are You Sure ?</h3>
+                      <p className="py-4">Press click Close button below to close</p>
+                      <div className="modal-action">
+                        <form method="dialog">
+                          {/* if there is a button in form, it will close the modal */}
+                          <button className="btn mx-5 rouned-xl bg-red-600 text-white hover:bg-red-700" onClick={() => deleteProject(project?._id)}> Yes</button>
+                          <button className="btn">Close</button>
+                        </form>
+                      </div>
+                    </div>
+                  </dialog>
+                  <button className='btn bg-green-600 p-3 rounded-xl text-white mt-5 hover:bg-green-700 mx-2' onClick={() => navigate(`/project/${project?._id}/edit`, {
                     state: {
                       title: project?.title,
                       TechStack: project?.TechStack,
@@ -226,18 +159,16 @@ const ViewProject = () => {
 
               <form className='mt-10 flex flex-col items-end'>
                 <textarea type='text' placeholder='add a comment' className='p-3 rounded-xl w-[60vw] outline-none bg-gray-200 text-black h-[120px]' value={commentContent} onChange={e => setCommentContent(e.target.value)} required></textarea>
-                <button type="submit" className="bg-green-600 text-white p-3 rounded-xl w-1/6 hover:bg-green-700" onClick={addComment} >Comment</button>
+                <button type="submit" className="btn bg-green-600 text-white p-3 rounded-xl w-1/6 hover:bg-green-700" onClick={addComment} >Comment</button>
               </form>
             </div>
-            <CommentAndReplies />
-            {/* </> : <Loader /> */}
+            <CommentAndReplies postCommentsAndReplies={response.data?.project} />
           </> :
-          <div className="flex w-52 flex-col gap-4 items-center justify-center">
-            <div className="skeleton bg-gray-300 h-32 w-full"></div>
-            <div className="skeleton bg-gray-300 h-4 w-28"></div>
-            <div className="skeleton bg-gray-300 h-4 w-full"></div>
-            <div className="skeleton bg-gray-300 h-4 w-full"></div>
-          </div>
+          <>
+            <Loader />
+            <Loader />
+            <Loader />
+          </>
         }
       </div >
     </>
