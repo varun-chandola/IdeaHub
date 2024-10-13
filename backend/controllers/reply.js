@@ -27,8 +27,17 @@ export const reply = async (req, res) => {
                 path: "owner",
                 select: "username"
             }]
+        }).populate({
+            path: "comments",
+            populate: [{
+                path: "replies",
+                populate: [{
+                    path: "owner",
+                    select: "username"
+                }]
+            }]
         })
-
+        
         return res.status(200).json({
             msg: `replied to comment`,
             commentAndreplies

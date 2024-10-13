@@ -22,7 +22,7 @@ export const addProject = async (req, res) => {
 
         return res.status(200).json({
             msg: "New Project Idea added",
-            newProject
+            // newProject
         })
     } catch (error) {
         return res.status(500).json({
