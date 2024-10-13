@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import ProfileIcon from './ProfileIcon'
 import Loader from './Loader'
@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom'
 import { authContext } from './Auth'
 import { MdDeleteOutline } from "react-icons/md";
 
-const CommentAndReplies = ({postCommentsAndReplies}) => {
+const CommentAndReplies = () => {
   const { loggedInUser, project, comments, setComments } = useContext(authContext)
-  const [replyBox, setReplyBox] = useState(null)
+  const [replyBox, setReplyBox] = useState()
   const [replyContent, setReplyContent] = useState('')
   const navigate = useNavigate()
 
@@ -31,8 +31,8 @@ const CommentAndReplies = ({postCommentsAndReplies}) => {
           } : comment
         )
       );
-
       setReplyContent('')
+      setReplyBox(null)
     } catch (error) {
       console.log(error?.response?.data?.msg)
       toast.error(error?.response?.data?.msg)
@@ -104,11 +104,11 @@ const CommentAndReplies = ({postCommentsAndReplies}) => {
   }
   return (
     <div className='flex flex-col items-center m-auto'>
-      <div className='text-black w-[60vw] flex-wrap h-screen text-xl'>
+      <div className='text-black w-[60vw] flex-wrap h-screen text-l'>
         {(project && comments) ?
           <>
             {comments?.slice()?.reverse().map(comment => (
-              <div key={comment?._id + (Date.now() * 1000)} className='mt-5 p-2'>
+              <div key={comment?._id} className='mt-5 p-2'>
                 <div className='flex flex-col'>
                   <div className='flex items-center'>
                     <span className='flex items-center justify-center'>
@@ -133,8 +133,6 @@ const CommentAndReplies = ({postCommentsAndReplies}) => {
                         onSubmit={e => e.preventDefault()}>
                         <textarea
                           type='text'
-                          name='reply'
-                          id='reply'
                           value={replyContent}
                           placeholder='add a reply'
                           className='p-2 rounded-xl w-[300px] outline-none text-gray-900'
@@ -142,13 +140,13 @@ const CommentAndReplies = ({postCommentsAndReplies}) => {
                         ></textarea>
                         <div className='flex justify-end'>
                           <button type="submit" className="bg-green-600 text-white p-3 rounded-xl hover:bg-green-700" onClick={() => addReply(comment?._id, project?._id)}>Add Reply</button>
-                          <button className="mx-4 bg-red-600 text-white p-3 rounded-xl hover:bg-red-700" onClick={() => setReplyBox(null)}>Cancel</button>
+                          <button className="mx-4 bg-red-600 text-white p-3 rounded-xl hover:bg-red-700" onClick={() => { setReplyContent(""); setReplyBox() }}>Cancel</button>
                         </div>
                       </form>
                     </div>
                   </div>
                 </div>
-                <div className='gap-5'>
+                <div className='gap-5' key={comment?._id}>
                   {comment?.replies?.slice()?.reverse().map(reply => (
                     <div key={reply?._id}>
                       <div key={reply?._id} className='mx-10 mt-5'>

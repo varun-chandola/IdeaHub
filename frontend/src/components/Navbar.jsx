@@ -8,7 +8,7 @@ import axios from 'axios';
 import { authContext } from './Auth';
 
 const Navbar = () => {
-    const { loggedInUser, setAllProjects } = useContext(authContext)
+    const { loggedInUser, setAllProjects, allProjects } = useContext(authContext)
     const navigate = useNavigate()
 
     const logout = async () => {
@@ -46,18 +46,28 @@ const Navbar = () => {
                     <ul
                         tabIndex={0}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                        <li><a>Item 1</a></li>
+                        <li><a><IoMdAddCircleOutline className='text-3xl hover:cursor-pointer'
+                            onClick={() => navigate('/add-project')}
+                        /></a></li>
                         <li>
-                            <a>Parent</a>
+                            <a>Select</a>
                             <ul className="p-2">
-                                <li><a>Submenu 1</a></li>
-                                <li><a>Submenu 2</a></li>
+                                <li><NavLink to='/profile'>Profile</NavLink></li>
+                                <li><a onClick={() => logout()}>Logout</a></li>
                             </ul>
                         </li>
-                        <li><a>Item 3</a></li>
+                        <li> <a>
+                            <FaHome
+                                className='text-3xl hover:cursor-pointer'
+                                onClick={() => {
+                                    setAllProjects(allProjects)
+                                    navigate('/all-projects')
+                                }}
+                            />
+                        </a></li>
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl">daisyUI</a>
+                <a className="btn btn-ghost text-xl">Ideas</a>
             </div>
             <div className="navbar-center hidden lg:flex">
                 <IoMdArrowRoundBack className='text-3xl hover:cursor-pointer hover:text-blue-500' onClick={() => window.history.back()} />
@@ -81,7 +91,7 @@ const Navbar = () => {
                             <FaHome
                                 className='text-3xl hover:cursor-pointer'
                                 onClick={() => {
-                                    setAllProjects(null)
+                                    setAllProjects(allProjects)
                                     navigate('/all-projects')
                                 }}
                             />

@@ -8,6 +8,7 @@ import AddProject from "./components/AddProject.jsx"
 import ViewProject from "./components/ViewProject.jsx"
 import Auth from "./components/Auth.jsx"
 import EditProject from "./components/EditProject.jsx"
+import Profile from "./components/Profile.jsx"
 import NotAvailable from "./components/NotAvailable.jsx"
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
             <Route path='/add-project' element={<AddProject />} />
             <Route path='/project/:projectId/' element={<ViewProject />} />
             <Route path='/project/:projectId/edit' element={<EditProject />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path='*' element={<NotAvailable />} />
           </Routes>
           <Toaster />

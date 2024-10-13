@@ -5,10 +5,10 @@ import './index.css'
 import Footer from './components/Footer.jsx'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <>
       <App />
       <Footer />
     </>
-  </StrictMode>
+  // </StrictMode>
 )

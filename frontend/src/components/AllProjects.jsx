@@ -35,10 +35,13 @@ const AllProjects = () => {
                 <Navbar />
                 {
                     allProjects?.length > 0 ?
-                        <div className='h-screen flex flex-col items-center'>
+                        <div className='h-100vh flex flex-col items-center'>
                             {allProjects?.map(each => (
                                 <div key={each._id} className='bg-gray-100 shadow-2xl text-black w-[60vw] rounded-xl flex justify-between p-5 mt-10 hover:cursor-pointer'
-                                    onClick={() => navigate(`/project/${each._id}`)} >
+                                    onClick={() => {
+                                        navigate(`/project/${each._id}`)
+                                        window.scrollTo(0, 0)
+                                    }} >
                                     <div className='w-1/2'>
                                         <h1 className='text-xl font-bold hover:underline'>{each.title}</h1>
                                         <div className=''>
@@ -80,9 +83,9 @@ const AllProjects = () => {
                         </div>
                         :
                         <div>
-                          <Loader />
-                          <Loader />
-                          <Loader />
+                            <Loader />
+                            <Loader />
+                            <Loader />
                         </div>
                 }
 

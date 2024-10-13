@@ -32,52 +32,52 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 text-gray-800">
       <header className="container mx-auto px-4 py-6 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">ProjectIdeas</Link>
+        <Link to="/" className="text-2xl font-bold text-purple-700">ProjectIdeas</Link>
         <nav>
           <ul className="flex space-x-4">
-            <li><Link to="/login" className="text-blue-400 font-semibold">Login</Link></li>
-            <li><Link to="/signup" className="hover:text-blue-400">Sign Up</Link></li>
+            <li><Link to="/login" className="text-purple-600 font-semibold hover:text-purple-800 transition-colors">Login</Link></li>
+            <li><Link to="/signup" className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full transition-colors">Sign Up</Link></li>
           </ul>
         </nav>
       </header>
 
       <main className="container mx-auto px-4 py-16 flex justify-center">
         <div className="w-full max-w-md">
-          <h2 className="text-3xl font-bold mb-6 text-center">Welcome Back</h2>
-          <div className="bg-gray-800 rounded-lg p-8 shadow-lg">
+          <h2 className="text-3xl font-bold mb-6 text-center text-purple-800">Welcome Back</h2>
+          <div className="bg-white rounded-lg p-8 shadow-xl">
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-1">
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
                   Username
                 </label>
                 <input
                   id="username"
                   type="text"
                   required
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-1">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                   Password
                 </label>
                 <input
                   id="password"
                   type="password"
                   required
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               {error && (
-                <div className="rounded-md bg-red-900 p-4">
+                <div className="rounded-md bg-red-50 p-4 border border-red-300">
                   <div className="flex">
                     <div className="flex-shrink-0">
                       <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -85,7 +85,7 @@ export default function Login() {
                       </svg>
                     </div>
                     <div className="ml-3">
-                      <h3 className="text-sm font-medium text-white">{error}</h3>
+                      <h3 className="text-sm font-medium text-red-800">{error}</h3>
                     </div>
                   </div>
                 </div>
@@ -93,16 +93,16 @@ export default function Login() {
               <div>
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
                 >
                   Login
                 </button>
               </div>
             </form>
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-600">
                 New to ProjectIdeas?{' '}
-                <Link to="/signup" className="font-medium text-blue-400 hover:text-blue-300">
+                <Link to="/signup" className="font-medium text-purple-600 hover:text-purple-500">
                   Create an account
                 </Link>
               </p>
@@ -110,10 +110,7 @@ export default function Login() {
           </div>
         </div>
       </main>
-
-      <footer className="container mx-auto px-4 py-8 mt-16 border-t border-gray-700 text-center text-gray-400">
-        <p>&copy; 2023 ProjectIdeas. All rights reserved.</p>
-      </footer>
     </div>
   )
+
 }

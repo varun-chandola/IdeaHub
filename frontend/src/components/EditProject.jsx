@@ -37,9 +37,9 @@ const EditProject = () => {
     return (
         <>
             <Navbar />
-            <div className="min-h-screen bg-gray-900 text-gray-100">
+            <div className="min-h-screen text-gray-100">
                 <div className="container mx-auto px-4 py-8">
-                    <h1 className="text-3xl font-bold mb-8 text-center">Edit Project</h1>
+                    <h1 className="text-3xl text-black font-bold mb-8 text-center">Edit Project</h1>
                     <div className="max-w-2xl mx-auto bg-gray-800 rounded-lg shadow-lg overflow-hidden">
                         <form className="p-6 space-y-6" onSubmit={editProject}>
                             <div>

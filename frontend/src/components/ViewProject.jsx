@@ -9,13 +9,12 @@ import ProfileIcon from './ProfileIcon.jsx'
 import CommentIcon from './CommentIcon.jsx'
 import Views from './Views.jsx'
 import { authContext } from './Auth.jsx'
-import { MdDeleteOutline } from "react-icons/md";
-
+import { MdDeleteOutline } from 'react-icons/md'
 
 const ViewProject = () => {
-  // const [project, setProject] = useState(null)
-  const { loggedInUser, postLikes, setPostLikes, comments, setComments, project, setProject, commentContent, setCommentContent } = useContext(authContext)
+  const { loggedInUser, postLikes, setPostLikes, comments, setComments, project, setProject } = useContext(authContext)
 
+  const [commentContent, setCommentContent] = useState('')
   const navigate = useNavigate()
 
   const { projectId } = useParams()
@@ -71,9 +70,105 @@ const ViewProject = () => {
     }
   }
 
+  // const { loggedInUser, project, comments, setComments } = useContext(authContext)
+  const [replyBox, setReplyBox] = useState()
+  const [replyContent, setReplyContent] = useState('')
+  console.log("REPLY CONTENT:", replyContent)
+  // const navigate = useNavigate()
+
+  const addReply = async (commentId, projectId) => {
+    try {
+      const response = await axios.post(`http://localhost:5000/api/v1/${commentId}/reply`,
+        {
+          replyContent,
+          projectId
+        },
+        { withCredentials: true })
+      console.log(response?.data)
+      toast.success(response?.data?.msg)
+      setComments(prevComments =>
+        prevComments?.map(comment =>
+          comment?._id === commentId ? {
+            ...comment,
+            replies: response.data.commentAndreplies.comments.find(c => c._id === commentId)?.replies || comment.replies
+          } : comment
+        )
+      );
+      // setComments(response?.data?.comments)
+      // setReplyContent('')
+      setReplyBox(null)
+    } catch (error) {
+      console.log(error?.response?.data?.msg)
+      toast.error(error?.response?.data?.msg)
+    }
+  }
+  const deleteComment = async (commentId, projectId) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/v1//${projectId}/${commentId}/delete-comment`, { withCredentials: true })
+      console.log(response?.data?.msg)
+      toast.success(response?.data?.msg)
+      setComments(response?.data?.restComments?.comments)
+    } catch (error) {
+      console.log(error?.response?.data?.msg)
+    }
+  }
+  const likeComment = async (commentId) => {
+    try {
+      console.log(commentId)
+      const response = await axios.post(`http://localhost:5000/api/v1/comment/u/like`, {
+        commentId,
+      }, { withCredentials: true })
+      toast.success(response.data?.msg)
+      console.log(response.data)
+      setComments(prevComments =>
+        prevComments.map(comment => {
+          if (comment?._id === commentId) {
+            return {
+              ...comment,
+              likes: response.data?.msg === "comment liked" ? comment.likes + 1 : comment.likes - 1
+            };
+          }
+          return comment;
+        })
+      );
+    } catch (error) {
+      console.log(error)
+      if ((error?.response?.data?.msg).includes('unauthorized')) navigate('/login')
+      toast.error(error?.response?.data?.msg)
+    }
+  }
+  const likeReply = async (replyId, projectId) => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/v1/reply/u/like", {
+        replyId,
+        projectId
+      }, { withCredentials: true })
+      setComments(prevComments =>
+        prevComments.map(comment => ({
+          ...comment,
+          replies: comment.replies.map(reply => {
+            if (reply._id === replyId) {
+              return {
+                ...reply,
+                likes: response.data?.msg === "Liked Reply" ? reply.likes + 1 : reply.likes - 1
+              };
+            }
+            return reply;
+          })
+        }))
+      );
+
+
+      toast.success(response.data?.msg)
+      console.log(response.data)
+    } catch (error) {
+      console.log(error)
+      toast.error(error?.response?.data?.msg)
+    }
+  }
   useEffect(() => {
     fetchPost()
-  }, [])
+  }, [comments?.length])
 
   return (
     <>
@@ -162,7 +257,9 @@ const ViewProject = () => {
                 <button type="submit" className="btn bg-green-600 text-white p-3 rounded-xl w-1/6 hover:bg-green-700" onClick={addComment} >Comment</button>
               </form>
             </div>
-            <CommentAndReplies postCommentsAndReplies={response.data?.project} />
+            {/* comments and replies */}
+            <CommentAndReplies />
+
           </> :
           <>
             <Loader />
