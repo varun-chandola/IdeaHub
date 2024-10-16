@@ -13,7 +13,7 @@ const Auth = ({ children }) => {
 
     const yourProjects = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/v1/your-projects`, { withCredentials: true })
+            const response = await axios.get(`https://ideahub-backend.onrender.com/api/v1/your-projects`, { withCredentials: true })
             console.log('Your Projects\n', response)
             setAllProjects(response.data?.yourProjects)
         } catch (error) {
@@ -23,7 +23,7 @@ const Auth = ({ children }) => {
     }
     const YourLikedProjects = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/v1/your-liked-projects`, { withCredentials: true })
+            const response = await axios.get(`https://ideahub-backend.onrender.com/api/v1/your-liked-projects`, { withCredentials: true })
             console.log(response?.data)
             setAllProjects(response.data?.yourLikedProjects)
         } catch (error) {

@@ -13,7 +13,7 @@ const Navbar = () => {
 
     const logout = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/api/v1/logout', {}, { withCredentials: true })
+            const response = await axios.post('https://ideahub-backend.onrender.com/api/v1/logout', {}, { withCredentials: true })
             if (response?.data?.msg == `logout`) {
                 console.log(response?.data?.msg)
                 toast.success(response?.data?.msg)

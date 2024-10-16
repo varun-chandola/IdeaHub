@@ -14,7 +14,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post(`http://localhost:5000/api/v1/login`, {
+      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/login`, {
         username,
         password
       }, {

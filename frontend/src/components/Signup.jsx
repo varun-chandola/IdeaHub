@@ -14,7 +14,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post(`http://localhost:5000/api/v1/signup`, {
+      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/signup`, {
         username,
         password
       }, {

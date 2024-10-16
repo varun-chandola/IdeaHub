@@ -23,7 +23,7 @@ const EditProject = () => {
         console.log(updatedData)
         try {
             e.preventDefault()
-            const response = await axios.patch(`http://localhost:5000/api/v1/${projectId}/edit`, updatedData, { withCredentials: true })
+            const response = await axios.patch(`https://ideahub-backend.onrender.com/api/v1/${projectId}/edit`, updatedData, { withCredentials: true })
             console.log(response?.data)
             if (response?.data?.msg === "updated") {
                 toast.success(response?.data?.msg)

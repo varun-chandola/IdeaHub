@@ -13,7 +13,7 @@ const AllProjects = () => {
     const navigate = useNavigate()
     const fetchAllPosts = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/v1/all-projects`, { withCredentials: true })
+            const response = await axios.get(`https://ideahub-backend.onrender.com/api/v1/all-projects`, { withCredentials: true })
             console.log(response?.data?.allProjects)
             setAllProjects(response?.data?.allProjects)
         } catch (error) {

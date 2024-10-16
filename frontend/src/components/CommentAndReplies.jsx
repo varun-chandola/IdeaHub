@@ -15,7 +15,7 @@ const CommentAndReplies = () => {
 
   const addReply = async (commentId, projectId) => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/v1/${commentId}/reply`,
+      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/${commentId}/reply`,
         {
           replyContent,
           projectId
@@ -40,7 +40,7 @@ const CommentAndReplies = () => {
   }
   const deleteComment = async (commentId, projectId) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/v1//${projectId}/${commentId}/delete-comment`, { withCredentials: true })
+      const response = await axios.delete(`https://ideahub-backend.onrender.com/api/v1//${projectId}/${commentId}/delete-comment`, { withCredentials: true })
       console.log(response?.data?.msg)
       toast.success(response?.data?.msg)
       setComments(response?.data?.restComments?.comments)
@@ -51,7 +51,7 @@ const CommentAndReplies = () => {
   const likeComment = async (commentId) => {
     try {
       console.log(commentId)
-      const response = await axios.post(`http://localhost:5000/api/v1/comment/u/like`, {
+      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/comment/u/like`, {
         commentId,
       }, { withCredentials: true })
       toast.success(response.data?.msg)
@@ -75,7 +75,7 @@ const CommentAndReplies = () => {
   }
   const likeReply = async (replyId, projectId) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/reply/u/like", {
+      const response = await axios.post("https://ideahub-backend.onrender.com/api/v1/reply/u/like", {
         replyId,
         projectId
       }, { withCredentials: true })

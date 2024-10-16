@@ -20,7 +20,7 @@ const ViewProject = () => {
   const { projectId } = useParams()
   const fetchPost = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/project/${projectId}`, { withCredentials: true })
+      const response = await axios.get(`https://ideahub-backend.onrender.com/api/v1/project/${projectId}`, { withCredentials: true })
       console.log("fetched project\n", response.data?.project)
       setProject(response?.data?.project)
       setComments(response.data?.project?.comments)
@@ -32,7 +32,7 @@ const ViewProject = () => {
   }
   const likeProject = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/v1/${projectId}/like`, {}, { withCredentials: true })
+      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/${projectId}/like`, {}, { withCredentials: true })
       console.log(response?.data)
       toast.success(response?.data?.msg)
       if (response?.data?.msg === "Liked") setPostLikes(prev => prev + 1)
@@ -45,7 +45,7 @@ const ViewProject = () => {
   const addComment = async (e) => {
     try {
       e.preventDefault()
-      const response = await axios.post(`http://localhost:5000/api/v1/${projectId}/comment`, {
+      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/${projectId}/comment`, {
         comment: commentContent
       }, { withCredentials: true })
       console.log(response.data)
@@ -59,7 +59,7 @@ const ViewProject = () => {
   }
   const deleteProject = async (projectId) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/v1/${projectId}/delete`, { withCredentials: true })
+      const response = await axios.delete(`https://ideahub-backend.onrender.com/api/v1/${projectId}/delete`, { withCredentials: true })
       console.log(response.data)
       if (response?.data?.msg === "Project Deleted") {
         toast.success(response?.data?.msg)
@@ -78,7 +78,7 @@ const ViewProject = () => {
 
   const addReply = async (commentId, projectId) => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/v1/${commentId}/reply`,
+      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/${commentId}/reply`,
         {
           replyContent,
           projectId
@@ -104,7 +104,7 @@ const ViewProject = () => {
   }
   const deleteComment = async (commentId, projectId) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/v1//${projectId}/${commentId}/delete-comment`, { withCredentials: true })
+      const response = await axios.delete(`https://ideahub-backend.onrender.com/api/v1//${projectId}/${commentId}/delete-comment`, { withCredentials: true })
       console.log(response?.data?.msg)
       toast.success(response?.data?.msg)
       setComments(response?.data?.restComments?.comments)
@@ -115,7 +115,7 @@ const ViewProject = () => {
   const likeComment = async (commentId) => {
     try {
       console.log(commentId)
-      const response = await axios.post(`http://localhost:5000/api/v1/comment/u/like`, {
+      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/comment/u/like`, {
         commentId,
       }, { withCredentials: true })
       toast.success(response.data?.msg)
@@ -139,7 +139,7 @@ const ViewProject = () => {
   }
   const likeReply = async (replyId, projectId) => {
     try {
-      const response = await axios.post("http://localhost:5000/api/v1/reply/u/like", {
+      const response = await axios.post("https://ideahub-backend.onrender.com/api/v1/reply/u/like", {
         replyId,
         projectId
       }, { withCredentials: true })
