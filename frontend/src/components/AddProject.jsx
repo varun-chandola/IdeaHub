@@ -14,7 +14,7 @@ const AddProject = () => {
     const addNewProject = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`http://localhost:5000/api/v1/add-project`, {
+            const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/add-project`, {
                 title,
                 level,
                 TechStack,
