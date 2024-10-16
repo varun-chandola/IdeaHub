@@ -1,1 +1,1 @@
-# Humorist-Society
+IdeaHub
