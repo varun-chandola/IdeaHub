@@ -27,13 +27,18 @@ export const signup = async (req, res) => {
             username
         }, process.env.JWT_SECRET, { expiresIn: '1d' })
 
-        return res.status(200).cookie('token', token , {
-            maxAge: 3600000
-        }).json({
-            msg: "Signup Successfull",
-            // newUser,
-            token
+        return res
+        .status(200)
+        .cookie('token', token, {
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'None',
+            maxAge: 24 * 60 * 60 * 1000
         })
+        .json({
+            msg: "Signup Successful",
+            token
+        });
     } catch (error) {
         return res.status(500).json({
             msg: "Signup Error",

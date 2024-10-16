@@ -26,10 +26,17 @@ export const login = async (req, res) => {
             username
         }, process.env.JWT_SECRET, { expiresIn: '1d' })
 
-        return res.status(200).cookie('token', token).json({
-            msg: "Login Successfull",
-            // foundUser,
-        })
+         return res
+         .cookie('token', token, {
+             httpOnly: true, 
+             secure: process.env.NODE_ENV === 'production', 
+             sameSite: 'None', 
+             maxAge: 24 * 60 * 60 * 1000 
+         })
+         .status(200)
+         .json({
+             msg: "Login Successful",
+         });
 
     } catch (error) {
         return res.status(500).json({
