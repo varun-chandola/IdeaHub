@@ -8,7 +8,7 @@ dotenv.config()
 
 const app = express()
 app.use(cors({
-    origin : 'http://localhost:5173',
+    origin : 'https://ideahub-nywg.onrender.com',
     credentials:true
 }))
 app.use(express.json())
