@@ -2,10 +2,12 @@ import React, { useContext, useState } from 'react'
 import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
 import { authContext } from './Auth'
+import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 
 export default function Login() {
   const { setLoggedInUser } = useContext(authContext)
+  const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState('')
@@ -14,13 +16,14 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/login`, {
+      setLoading(prev => !prev)
+      const response = await axios.post(`hhttps://ideahub-backend.onrender.com/api/v1/login`, {
         username,
         password
       }, {
         withCredentials: true
       })
-      if (response?.data?.msg === "Login Successful") {
+      if (response?.data?.msg === "Login Successfull") {
         setLoggedInUser(username)
         toast.success(response?.data.msg)
         navigate('/all-projects')
@@ -32,20 +35,15 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 text-gray-800">
+    <div className="h-[95vh] bg-black text-white m-5 rounded-[30px]">
       <header className="container mx-auto px-4 py-6 flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold text-purple-700">ProjectIdeas</Link>
-        <nav>
-          <ul className="flex space-x-4">
-            <li><Link to="/login" className="text-purple-600 font-semibold hover:text-purple-800 transition-colors">Login</Link></li>
-            <li><Link to="/signup" className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full transition-colors">Sign Up</Link></li>
-          </ul>
-        </nav>
+        <Link to="/" className="text-3xl font-bold">IdeaHub</Link>
       </header>
 
+      <motion.main animate={{y:-15}}>
       <main className="container mx-auto px-4 py-16 flex justify-center">
         <div className="w-full max-w-md">
-          <h2 className="text-3xl font-bold mb-6 text-center text-purple-800">Welcome Back</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center underline decoration-wavy decoration-green-400">Welcome Back</h2>
           <div className="bg-white rounded-lg p-8 shadow-xl">
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
@@ -56,7 +54,7 @@ export default function Login() {
                   id="username"
                   type="text"
                   required
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
@@ -70,7 +68,7 @@ export default function Login() {
                   id="password"
                   type="password"
                   required
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-colors"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -91,18 +89,23 @@ export default function Login() {
                 </div>
               )}
               <div>
-                <button
-                  type="submit"
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-                >
-                  Login
-                </button>
+                {
+                  loading ?
+                    <button className='w-full'><span className="loading loading-spinner loading-xl text-black"></span></button>
+                    :
+                    <button
+                      type="submit"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    >
+                      Login
+                    </button>
+                }
               </div>
             </form>
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                New to ProjectIdeas?{' '}
-                <Link to="/signup" className="font-medium text-purple-600 hover:text-purple-500">
+                New to IdeaHub?{' '}
+                <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
                   Create an account
                 </Link>
               </p>
@@ -110,7 +113,8 @@ export default function Login() {
           </div>
         </div>
       </main>
-    </div>
+    </motion.main>
+    </div >
   )
 
 }
