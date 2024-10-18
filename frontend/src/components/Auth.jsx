@@ -36,10 +36,21 @@ const Auth = ({ children }) => {
 
 
     const token = document?.cookie?.split("=")[1];
-    console.log(token?.split(".")?.[1])
     // const splittedToken = token?.split(".")?.[1]
     // console.log("split:", splittedToken)
     // const decodedToken = jwtDecode(token?.split(".")?.[1])
+    useEffect(() => {
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                console.log(decodedToken);
+                setLoggedInUser(decodedToken?.username);
+            } catch (e) {
+                console.error("Token decoding error:", e);
+            }
+        }
+    }, [token]);
+
     useEffect(() => {
         // const decodedToken = jwtDecode(splittedToken)
         const decodedToken = jwtDecode(String(token))
