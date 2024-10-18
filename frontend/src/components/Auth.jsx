@@ -36,14 +36,16 @@ const Auth = ({ children }) => {
 
 
     const token = document?.cookie?.split("=")[1];
-    const decodedToken = jwtDecode(token)
+    console.log(token?.split(".")?.[1])
+    // const splittedToken = token?.split(".")?.[1]
+    // console.log("split:", splittedToken)
+    // const decodedToken = jwtDecode(token?.split(".")?.[1])
     useEffect(() => {
-        console.log('logged in user : ', loggedInUser)
-    }, [loggedInUser])
-
-    useEffect(() => {
+        // const decodedToken = jwtDecode(splittedToken)
+        const decodedToken = jwtDecode(String(token))
+        console.log(decodedToken)
         setLoggedInUser(decodedToken?.username)
-    }, [token])
+    }, [token, loggedInUser])
 
     return (
         <authContext.Provider value={{ loggedInUser, setLoggedInUser, postLikes, setPostLikes, comments, setComments, project, setProject, userLikedPost, setUserLikedPost, allProjects, setAllProjects, commentLikes, setCommentLikes, yourProjects, YourLikedProjects }}>
