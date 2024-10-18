@@ -14,7 +14,7 @@ const Navbar = () => {
     const logout = async () => {
         try {
             const response = await axios.post('https://ideahub-backend.onrender.com/api/v1/logout', {}, { withCredentials: true })
-            if (response?.data?.msg == `logout`) {
+            if (response?.data?.msg == `Logout successful`) {
                 console.log(response?.data?.msg)
                 toast.success(response?.data?.msg)
                 navigate('/')
