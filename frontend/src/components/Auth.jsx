@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { createContext, useEffect, useState } from 'react'
+import { jwtDecode } from "jwt-decode"
 export const authContext = createContext()
 const Auth = ({ children }) => {
     const [loggedInUser, setLoggedInUser] = useState('')
@@ -11,9 +12,10 @@ const Auth = ({ children }) => {
     const [commentLikes, setCommentLikes] = useState(0)
 
 
+
     const yourProjects = async () => {
         try {
-            const response = await axios.get(`https://ideahub-backend.onrender.com/api/v1/your-projects`, { withCredentials: true })
+            const response = await axios.get(`http://localhost:5000/api/v1/your-projects`, { withCredentials: true })
             console.log('Your Projects\n', response)
             setAllProjects(response.data?.yourProjects)
         } catch (error) {
@@ -23,7 +25,7 @@ const Auth = ({ children }) => {
     }
     const YourLikedProjects = async () => {
         try {
-            const response = await axios.get(`https://ideahub-backend.onrender.com/api/v1/your-liked-projects`, { withCredentials: true })
+            const response = await axios.get(`http://localhost:5000/api/v1/your-liked-projects`, { withCredentials: true })
             console.log(response?.data)
             setAllProjects(response.data?.yourLikedProjects)
         } catch (error) {
@@ -34,21 +36,13 @@ const Auth = ({ children }) => {
 
 
     const token = document?.cookie?.split("=")[1];
+    const decodedToken = jwtDecode(token)
     useEffect(() => {
         console.log('logged in user : ', loggedInUser)
     }, [loggedInUser])
 
     useEffect(() => {
-
-        if (token) {
-            try {
-                const payload = JSON.parse(atob(token.split(".")[1]));
-                setLoggedInUser(payload.username);
-            } catch (e) {
-                console.error("Invalid token:", e);
-                // toast.error(e)
-            }
-        }
+        setLoggedInUser(decodedToken?.username)
     }, [token])
 
     return (
