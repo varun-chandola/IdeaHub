@@ -21,7 +21,7 @@ const Signup = () => {
         withCredentials: true
       })
       console.log(response.data)
-      if (response?.data?.msg == "Signup Successfull") {
+      if (response?.data?.msg == "Signup Successful") {
         setLoggedInUser(username)
         toast.success(`Welcome @${username}`)
         navigate('/all-projects')

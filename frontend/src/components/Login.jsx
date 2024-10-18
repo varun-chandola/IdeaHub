@@ -20,7 +20,7 @@ export default function Login() {
       }, {
         withCredentials: true
       })
-      if (response?.data?.msg === "Login Successfull") {
+      if (response?.data?.msg === "Login Successful") {
         setLoggedInUser(username)
         toast.success(response?.data.msg)
         navigate('/all-projects')
