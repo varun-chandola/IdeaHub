@@ -2,10 +2,11 @@ import React, { useContext, useState } from 'react'
 import axios from "axios"
 import { authContext } from './Auth'
 import { Link, useNavigate } from 'react-router-dom'
-import {motion} from "framer-motion"
+import { motion } from "framer-motion"
 import toast from 'react-hot-toast'
 
 const Signup = () => {
+  const [loading, setLoading] = useState(false)
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState('')
@@ -14,6 +15,7 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault()
+    setLoading(true)
     try {
       const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/signup`, {
         username,
@@ -22,13 +24,16 @@ const Signup = () => {
         withCredentials: true
       })
       console.log(response.data)
-      if (response?.data?.msg == "Signup Successful") {
+      if (response?.data?.msg == "Signup Successfull") {
         setLoggedInUser(username)
+        setLoading(false)
         toast.success(`Welcome @${username}`)
         navigate('/all-projects')
       }
     } catch (error) {
       setError(error?.response?.data?.msg)
+    } finally {
+      setLoading(false)
     }
   }
 
