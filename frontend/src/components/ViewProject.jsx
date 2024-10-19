@@ -9,10 +9,11 @@ import ProfileIcon from './ProfileIcon.jsx'
 import CommentIcon from './CommentIcon.jsx'
 import Views from './Views.jsx'
 import { authContext } from './Auth.jsx'
-import { MdDeleteOutline } from 'react-icons/md'
 
 const ViewProject = () => {
   const { loggedInUser, postLikes, setPostLikes, comments, setComments, project, setProject } = useContext(authContext)
+  const [likeLoader, setLikeLoader] = useState(false)
+  const [commentLoader, setCommentLoader] = useState(false)
 
   const [commentContent, setCommentContent] = useState('')
   const navigate = useNavigate()
@@ -32,29 +33,46 @@ const ViewProject = () => {
   }
   const likeProject = async () => {
     try {
+      setLikeLoader(true)
       const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/${projectId}/like`, {}, { withCredentials: true })
       console.log(response?.data)
       toast.success(response?.data?.msg)
-      if (response?.data?.msg === "Liked") setPostLikes(prev => prev + 1)
-      else setPostLikes(prev => prev - 1)
+      if (response?.data?.msg === "Liked") {
+        setLikeLoader(false)
+        setPostLikes(prev => prev + 1)
+      }
+      else {
+        setLikeLoader(false)
+        setPostLikes(prev => prev - 1)
+      }
     } catch (error) {
       console.log(error?.response?.data?.msg)
+      setLikeLoader(false)
       toast.error(error?.response?.data?.msg)
+    } finally {
+      setLikeLoader(false)
     }
   }
   const addComment = async (e) => {
     try {
+      setCommentLoader(true)
       e.preventDefault()
       const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/${projectId}/comment`, {
         comment: commentContent
       }, { withCredentials: true })
       console.log(response.data)
-      setComments(response?.data?.postComments?.comments)
-      setCommentContent('')
-      toast.success(response?.data?.msg)
+      if (response && response?.data?.postComments?.comments) {
+        setComments(response?.data?.postComments?.comments)
+        setCommentLoader(false)
+        setCommentContent('')
+        toast.success(response?.data?.msg)
+      }
     } catch (error) {
       console.log(error.response?.data?.msg)
+      setCommentLoader(false)
       toast.error(error.response?.data?.msg)
+    } finally {
+      setCommentLoader(false)
     }
   }
   const deleteProject = async (projectId) => {
@@ -69,12 +87,9 @@ const ViewProject = () => {
       console.log(error?.response?.data?.msg)
     }
   }
-
-  // const { loggedInUser, project, comments, setComments } = useContext(authContext)
   const [replyBox, setReplyBox] = useState()
   const [replyContent, setReplyContent] = useState('')
   console.log("REPLY CONTENT:", replyContent)
-  // const navigate = useNavigate()
 
   const addReply = async (commentId, projectId) => {
     try {
@@ -94,75 +109,9 @@ const ViewProject = () => {
           } : comment
         )
       );
-      // setComments(response?.data?.comments)
-      // setReplyContent('')
       setReplyBox(null)
     } catch (error) {
       console.log(error?.response?.data?.msg)
-      toast.error(error?.response?.data?.msg)
-    }
-  }
-  const deleteComment = async (commentId, projectId) => {
-    try {
-      const response = await axios.delete(`https://ideahub-backend.onrender.com/api/v1//${projectId}/${commentId}/delete-comment`, { withCredentials: true })
-      console.log(response?.data?.msg)
-      toast.success(response?.data?.msg)
-      setComments(response?.data?.restComments?.comments)
-    } catch (error) {
-      console.log(error?.response?.data?.msg)
-    }
-  }
-  const likeComment = async (commentId) => {
-    try {
-      console.log(commentId)
-      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/comment/u/like`, {
-        commentId,
-      }, { withCredentials: true })
-      toast.success(response.data?.msg)
-      console.log(response.data)
-      setComments(prevComments =>
-        prevComments.map(comment => {
-          if (comment?._id === commentId) {
-            return {
-              ...comment,
-              likes: response.data?.msg === "comment liked" ? comment.likes + 1 : comment.likes - 1
-            };
-          }
-          return comment;
-        })
-      );
-    } catch (error) {
-      console.log(error)
-      if ((error?.response?.data?.msg).includes('unauthorized')) navigate('/login')
-      toast.error(error?.response?.data?.msg)
-    }
-  }
-  const likeReply = async (replyId, projectId) => {
-    try {
-      const response = await axios.post("https://ideahub-backend.onrender.com/api/v1/reply/u/like", {
-        replyId,
-        projectId
-      }, { withCredentials: true })
-      setComments(prevComments =>
-        prevComments.map(comment => ({
-          ...comment,
-          replies: comment.replies.map(reply => {
-            if (reply._id === replyId) {
-              return {
-                ...reply,
-                likes: response.data?.msg === "Liked Reply" ? reply.likes + 1 : reply.likes - 1
-              };
-            }
-            return reply;
-          })
-        }))
-      );
-
-
-      toast.success(response.data?.msg)
-      console.log(response.data)
-    } catch (error) {
-      console.log(error)
       toast.error(error?.response?.data?.msg)
     }
   }
@@ -213,7 +162,14 @@ const ViewProject = () => {
                     <div className='flex flex-col items-center'>
                       <p className='mb-2'>{project?.level}</p>
                       <button className='text-3xl' onClick={likeProject}>👍</button>
-                      <span className='text-2xl mx-3 font-extrabold'>{postLikes}</span>
+                      <span
+                        className='text-2xl mx-3 font-extrabold'>
+                        {likeLoader ?
+                          <button className='w-full'><span className="loading loading-spinner loading-xl text-black"></span></button>
+                          :
+                          postLikes
+                        }
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -222,11 +178,8 @@ const ViewProject = () => {
                   <h2>{project?.content}</h2>
                 </div>
               </div>
-              {/* if logged in user is owner . so show delete button and update button*/}
               {(project?.owner?.username === loggedInUser) ?
                 <div className=''>
-                  {/* <button className='bg-red-600 p-3 rounded-xl text-white mt-5 hover:bg-red-700 mx-2' onClick={() => deleteProject(project?._id)}>Delete Project</button> */}
-                  {/* Open the modal using document.getElementById('ID').showModal() method */}
                   <button className="btn bg-red-600 p-3 rounded-xl text-white mt-5 hover:bg-red-700 mx-2" onClick={() => document.getElementById('my_modal_1').showModal()}>Delete Project</button>
                   <dialog id="my_modal_1" className="modal">
                     <div className="modal-box">
@@ -254,7 +207,9 @@ const ViewProject = () => {
 
               <form className='mt-10 flex flex-col items-end'>
                 <textarea type='text' placeholder='add a comment' className='p-3 rounded-xl w-[60vw] outline-none bg-gray-200 text-black h-[120px]' value={commentContent} onChange={e => setCommentContent(e.target.value)} required></textarea>
-                <button type="submit" className="btn bg-green-600 text-white p-3 rounded-xl w-1/6 hover:bg-green-700" onClick={addComment} >Comment</button>
+                <button type="submit" className="btn bg-green-600 text-white p-3 rounded-xl w-1/6 hover:bg-green-700" onClick={addComment} >
+                  {commentLoader ? <button className='w-full'><span className="loading loading-spinner loading-xl text-white font-extrabold"></span></button> : `Comment`}
+                </button>
               </form>
             </div>
             {/* comments and replies */}

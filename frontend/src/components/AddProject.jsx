@@ -10,10 +10,12 @@ const AddProject = () => {
     const [TechStack, setTechStack] = useState('');
     const [content, setContent] = useState('');
     const navigate = useNavigate()
+    const [ideaLoader, setIdeaLoader] = useState(false)
 
     const addNewProject = async (e) => {
         e.preventDefault();
         try {
+            setIdeaLoader(true)
             const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/add-project`, {
                 title,
                 level,
@@ -22,11 +24,15 @@ const AddProject = () => {
             }, { withCredentials: true });
 
             if (response.data?.msg) {
+                setIdeaLoader(false)
                 toast.success(response.data?.msg)
                 navigate('/all-projects')
             }
         } catch (error) {
+            setIdeaLoader(false)
             toast.error(error.response?.data?.msg);
+        } finally {
+            setIdeaLoader(false)
         }
     };
 
@@ -87,12 +93,13 @@ const AddProject = () => {
                                     onChange={e => setContent(e.target.value)}
                                 ></textarea>
                             </div>
-                            <button
-                                type="submit"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                            >
-                                Create Project Idea
-                            </button>
+                            {ideaLoader ? <button className='w-full'><span className="loading loading-spinner loading-xl text-white"></span></button> :
+                                <button
+                                    type="submit"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                                >
+                                    Create Project Idea
+                                </button>}
                         </form>
                     </div>
                 </div>

@@ -17,8 +17,8 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
     try {
-      const response = await axios.post(`hhttps://ideahub-backend.onrender.com/api/v1/login`, {
-       username,
+      const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/login`, {
+        username,
         password
       }, {
         withCredentials: true

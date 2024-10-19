@@ -10,6 +10,7 @@ const EditProject = () => {
     const [updatedTechStack, setUpdatedTechStack] = useState("")
     const [updatedContent, setUpdatedContent] = useState("")
     const location = useLocation()
+    const [editLoader, setEditLoader] = useState(false)
     const { projectId } = useParams()
     const navigate = useNavigate()
 
@@ -23,15 +24,20 @@ const EditProject = () => {
         console.log(updatedData)
         try {
             e.preventDefault()
+            setEditLoader(true)
             const response = await axios.patch(`https://ideahub-backend.onrender.com/api/v1/${projectId}/edit`, updatedData, { withCredentials: true })
             console.log(response?.data)
             if (response?.data?.msg === "updated") {
+                setEditLoader(false)
                 toast.success(response?.data?.msg)
                 navigate(`/project/${projectId}`)
             }
         } catch (error) {
+            setEditLoader(false)
             console.log(error?.response?.data?.msg)
             toast.error(error?.response?.data?.msg)
+        } finally {
+            setEditLoader(false)
         }
     }
     return (
@@ -88,12 +94,16 @@ const EditProject = () => {
                                     onChange={e => setUpdatedContent(e.target.value)}
                                 ></textarea>
                             </div>
-                            <button
-                                type="submit"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                            >
-                                Create Project Idea
-                            </button>
+                            {editLoader ?
+                                <button className='w-full'><span className="loading loading-spinner loading-xl text-white"></span></button>
+                                :
+                                <button
+                                    type="submit"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                                >
+                                    Create Project Idea
+                                </button>
+                            }
                         </form>
                     </div>
                 </div>

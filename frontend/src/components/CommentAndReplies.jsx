@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import toast from 'react-hot-toast'
 import ProfileIcon from './ProfileIcon'
 import Loader from './Loader'
@@ -9,6 +9,8 @@ import { MdDeleteOutline } from "react-icons/md";
 
 const CommentAndReplies = () => {
   const { loggedInUser, project, comments, setComments } = useContext(authContext)
+  const [deleteLoader, setDeleteLoader] = useState(false)
+  
   const [replyBox, setReplyBox] = useState()
   const [replyContent, setReplyContent] = useState('')
   const navigate = useNavigate()
@@ -21,7 +23,6 @@ const CommentAndReplies = () => {
           projectId
         },
         { withCredentials: true })
-      console.log(response?.data)
       toast.success(response?.data?.msg)
       setComments(prevComments =>
         prevComments?.map(comment =>
@@ -40,12 +41,19 @@ const CommentAndReplies = () => {
   }
   const deleteComment = async (commentId, projectId) => {
     try {
+      setDeleteLoader(true)
       const response = await axios.delete(`https://ideahub-backend.onrender.com/api/v1//${projectId}/${commentId}/delete-comment`, { withCredentials: true })
       console.log(response?.data?.msg)
-      toast.success(response?.data?.msg)
-      setComments(response?.data?.restComments?.comments)
+      if (response && response?.data.msg) {
+        setDeleteLoader(false)
+        toast.success(response?.data?.msg)
+        setComments(response?.data?.restComments?.comments)
+      }
     } catch (error) {
       console.log(error?.response?.data?.msg)
+      setDeleteLoader(false)
+    } finally {
+      setDeleteLoader(false)
     }
   }
   const likeComment = async (commentId) => {
@@ -115,7 +123,19 @@ const CommentAndReplies = () => {
                       <ProfileIcon />
                     </span>
                     <h1 className='rounded-xl p-1'>{comment?.owner?.username}</h1>
-                    {(loggedInUser === (comment?.owner?.username)) ? <MdDeleteOutline className='text-2xl mx-3 hover:cursor-pointer' onClick={() => deleteComment(comment?._id, project?._id)} /> : <></>}
+                    {(loggedInUser === comment?.owner?.username) ? (
+                      deleteLoader ? (
+                        <button className=''>
+                          <span className="loading loading-spinner loading-xl text-black"></span>
+                        </button>
+                      ) : (
+                        <MdDeleteOutline
+                          className='text-2xl mx-3 hover:cursor-pointer'
+                          onClick={() => deleteComment(comment?._id, project?._id)}
+                        />
+                      )
+                    ) : null}
+
                   </div>
                 </div>
                 <div className='mx-6 flex gap-4'>
