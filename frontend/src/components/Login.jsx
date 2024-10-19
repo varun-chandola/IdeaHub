@@ -23,10 +23,10 @@ export default function Login() {
       }, {
         withCredentials: true
       })
-      if (response?.data?.msg === "Login successful") {
+      if (response?.data?.msg == "Login Successful") {
         setLoggedInUser(username)
         setLoading(false)
-        toast.success(response?.data.msg)
+        toast.success(response?.data?.msg)
         navigate('/all-projects')
       }
     } catch (error) {
