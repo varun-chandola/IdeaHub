@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import axios from "axios"
 import { authContext } from './Auth'
 import { Link, useNavigate } from 'react-router-dom'
+import {motion} from "framer-motion"
 import toast from 'react-hot-toast'
 
 const Signup = () => {
