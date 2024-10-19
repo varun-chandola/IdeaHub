@@ -24,7 +24,7 @@ const Signup = () => {
         withCredentials: true
       })
       console.log(response.data)
-      if (response?.data?.msg == "Signup Successfull") {
+      if (response?.data?.msg == "Signup Successful") {
         setLoggedInUser(username)
         setLoading(false)
         toast.success(`Welcome @${username}`)
@@ -92,6 +92,7 @@ const Signup = () => {
                   </div>
                 )}
                 <div>
+
                   {
                     loading ?
                       <button className='w-full'><span className="loading loading-spinner loading-xl text-black"></span></button>
