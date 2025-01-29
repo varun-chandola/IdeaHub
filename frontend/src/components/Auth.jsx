@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { createContext, useEffect, useState } from 'react'
 import { jwtDecode } from "jwt-decode"
+import toast from 'react-hot-toast';
 export const authContext = createContext()
 const Auth = ({ children }) => {
     const [loggedInUser, setLoggedInUser] = useState('')
@@ -11,29 +12,31 @@ const Auth = ({ children }) => {
     const [allProjects, setAllProjects] = useState([])
     const [commentLikes, setCommentLikes] = useState(0)
 
-
-
     const yourProjects = async () => {
         try {
+            setAllProjects([])
             const response = await axios.get(`https://ideahub-backend.onrender.com/api/v1/your-projects`, { withCredentials: true })
             console.log('Your Projects\n', response)
             setAllProjects(response.data?.yourProjects)
         } catch (error) {
             console.log(error.response?.data?.msg)
-            toast.error(error.response?.data?.msg)
+            toast.error("Unauthorized ! Login First")
+            window.location.href = '/login'
         }
     }
+
     const YourLikedProjects = async () => {
         try {
+            setAllProjects([])
             const response = await axios.get(`https://ideahub-backend.onrender.com/api/v1/your-liked-projects`, { withCredentials: true })
             console.log(response?.data)
             setAllProjects(response.data?.yourLikedProjects)
         } catch (error) {
             console.log(error?.response?.data?.msg)
-            toast.error(error?.response?.data?.msg)
+            toast.error("Unauthorized ! Login First")
+            window.location.href = '/login'
         }
     }
-
 
     const token = document?.cookie?.split("=")[1];
 

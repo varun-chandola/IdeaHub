@@ -29,6 +29,7 @@ const ViewProject = () => {
     } catch (error) {
       console.log(error.response.data?.msg)
       toast.error(error.response.data?.msg)
+      navigate('/login')
     }
   }
   const likeProject = async () => {
@@ -145,7 +146,10 @@ const ViewProject = () => {
                           </span>
                         </div>
                         <div className='flex gap-1 items-center'>
-                          <p className=''>{Date(project?.createAt)?.split(' ')[1] + "/" + Date(project?.createAt)?.split(' ')[2] + "/" + Date(project?.createAt)?.split(' ')[3]}</p>
+                          <p>{(String(new Date(`${project.createdAt}`)).split(" ")[0])}</p>
+                          <p>{(String(new Date(`${project.createdAt}`)).split(" ")[1])}</p>
+                          <p>{(String(new Date(`${project.createdAt}`)).split(" ")[2])}</p>
+                          <p>{(String(new Date(`${project.createdAt}`)).split(" ")[3])}</p>
                           <span className='flex gap-1 items-center'>
                             |
                             <Views />

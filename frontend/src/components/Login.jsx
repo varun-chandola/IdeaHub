@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react'
 import axios from "axios"
 import { Link, useNavigate } from 'react-router-dom'
 import { authContext } from './Auth'
-import { motion } from 'framer-motion'
 import toast from 'react-hot-toast'
 
 export default function Login() {
@@ -15,8 +14,8 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    setLoading(true)
     try {
+      setLoading(true)
       const response = await axios.post(`https://ideahub-backend.onrender.com/api/v1/login`, {
         username,
         password
@@ -39,15 +38,14 @@ export default function Login() {
   }
 
   return (
-    <div className="h-[95vh] bg-black text-white m-5 rounded-[30px]">
+    <div className="h-[85vh]">
       <header className="container mx-auto px-4 py-6 flex justify-between items-center">
         <Link to="/" className="text-3xl font-bold">IdeaHub</Link>
       </header>
 
-      <motion.main animate={{ y: -15 }}>
         <main className="container mx-auto px-4 py-16 flex justify-center">
           <div className="w-full max-w-md">
-            <h2 className="text-3xl font-bold mb-6 text-center underline decoration-wavy decoration-green-400">Welcome Back</h2>
+            <h2 className="text-3xl font-bold mb-6 text-center">Welcome Back</h2>
             <div className="bg-white rounded-lg p-8 shadow-xl">
               <form onSubmit={handleLogin} className="space-y-6">
                 <div>
@@ -117,7 +115,6 @@ export default function Login() {
             </div>
           </div>
         </main>
-      </motion.main>
     </div >
   )
 

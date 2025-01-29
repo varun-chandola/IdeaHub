@@ -16,7 +16,7 @@ const YourLikedProjects = () => {
             {console.log(allProjects)}
             <div>
                 {
-                    allProjects?.length >= 0 ?
+                    allProjects?.length > 0 ?
                         <div className='h-100vh flex flex-col items-center'>
                             {allProjects?.map(each => (
                                 <div key={each._id} className='bg-gray-100 shadow-2xl text-black w-[60vw] rounded-xl flex justify-between p-5 mt-10 hover:cursor-pointer'
@@ -41,7 +41,10 @@ const YourLikedProjects = () => {
                                                 </span>
                                             </div>
                                             <div className='flex gap-1 items-center'>
-                                                <p className=''>{Date(each?.createAt)?.split(' ')[1] + "/" + Date(each?.createAt)?.split(' ')[2] + "/" + Date(each?.createAt)?.split(' ')[3]}</p>
+                                                <p>{(String(new Date(`${each.createdAt}`)).split(" ")[0])}</p>
+                                                <p>{(String(new Date(`${each.createdAt}`)).split(" ")[1])}</p>
+                                                <p>{(String(new Date(`${each.createdAt}`)).split(" ")[2])}</p>
+                                                <p>{(String(new Date(`${each.createdAt}`)).split(" ")[3])}</p>
                                                 <span className='flex gap-1 items-center'>
                                                     |
                                                     <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M3 5v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2H5c-1.103 0-2 .897-2 2zm16.001 14H5V5h14l.001 14z"></path><path d="M11 7h2v10h-2zm4 3h2v7h-2zm-8 2h2v5H7z"></path></svg>

@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body{
-    font-family: "Recursive";
+
+body {
+    /* font-family: "Recursive"; */
+    font-family: "Geist", serif;
+
 }

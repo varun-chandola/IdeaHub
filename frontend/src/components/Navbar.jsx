@@ -26,7 +26,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className="navbar bg-base-100">
+        <div className="navbar bg-base-100 max-w-[60vw] mx-auto">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -100,7 +100,7 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end">
-                <a className="mx-10 p-2 rounded-xl font-bold btn" href='https://x.com/VarunChandola7' target='_blank'>Follow</a>
+                <a className="underline text-l font-bold" href='https://x.com/VarunChandola7' target='_blank'>Follow</a>
             </div>
         </div>
     )

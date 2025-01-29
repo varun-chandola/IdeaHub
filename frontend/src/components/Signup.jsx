@@ -38,15 +38,14 @@ const Signup = () => {
   }
 
   return (
-    <div className="h-[95vh] bg-black text-white m-5 rounded-[30px]">
+    <div className="h-[85vh] rounded-[30px]">
       <header className="container mx-auto px-4 py-6 flex justify-between items-center">
         <Link to="/" className="text-3xl font-bold">IdeaHub</Link>
       </header>
 
-      <motion.main animate={{ y: -15 }}>
         <main className="container mx-auto px-4 py-16 flex justify-center">
           <div className="w-full max-w-md">
-            <h2 className="text-3xl font-bold mb-6 text-center underline decoration-wavy decoration-green-400">Create Your Account</h2>
+            <h2 className="text-3xl font-bold mb-6 text-center">Create Your Account</h2>
             <div className="bg-white rounded-lg p-8 shadow-xl">
               <form onSubmit={handleSignup} className="space-y-6">
                 <div>
@@ -117,7 +116,6 @@ const Signup = () => {
             </div>
           </div>
         </main>
-      </motion.main >
     </div >
   )
 }
