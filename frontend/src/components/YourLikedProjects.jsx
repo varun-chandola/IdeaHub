@@ -53,7 +53,7 @@ const YourLikedProjects = () => {
                                             </div>
                                             <div>
                                                 {each?.TechStack?.map(x => (
-                                                    <button key={x} className='bg-gray-200 p-1 mr-4'>{x}</button>
+                                                    <button key={x} className='bg-gray-200 p-1 mr-4 mb-3'>{x}</button>
                                                 ))}
                                             </div>
                                         </div>

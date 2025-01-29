@@ -60,7 +60,7 @@ const Navbar = () => {
                             <FaHome
                                 className='text-3xl hover:cursor-pointer'
                                 onClick={() => {
-                                    setAllProjects(allProjects)
+                                    setAllProjects([])
                                     navigate('/all-projects')
                                 }}
                             />

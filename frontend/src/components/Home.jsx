@@ -35,7 +35,7 @@ const Home = () => {
       </div>
       <div className="flex flex-col">
         <div className="mt-[10vh] max-w-[80vw] mx-auto">
-          <div className='max-w-[50vw]'>
+          <div className='max-w-[60vw]'>
             <h1 className='text-6xl font-extrabold'>Get great <span className='text-6xl font-extrabold bg-gradient-to-r from-orange-500 via-red-500 to-yellow-400 bg-clip-text text-transparent'>Project Ideas</span>🔥<br />from the Community of <br />Tech Enthusiasts</h1>
             <div className='flex gap-6 mt-5 items-center justify-center'>
               <Link to='/login' className="px-6 py-3 w-48 text-center bg-black text-white text-lg font-semibold rounded-lg shadow-md hover:bg-gray-900 transition duration-300 w-[15vw]">Login</Link>
@@ -48,7 +48,7 @@ const Home = () => {
           </div>
         </div>
         <div className='w-[65vw] mx-auto h-1/2 bg-blue-400 p-16 rounded-3xl mt-4 flex shadow-2xl shadow-blue-900'>
-          <img src={`https://res.cloudinary.com/da2fioulc/image/upload/v1738146339/y6mqexg1xhhd2qtwbusq.png`} className='rounded-3xl' />
+          <img src={`https://res.cloudinary.com/da2fioulc/image/upload/v1738151222/kynidponb86zk7p0rirj.png`} className='rounded-3xl' />
         </div>
       </div>
     </div>
